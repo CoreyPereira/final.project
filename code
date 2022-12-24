@@ -1,0 +1,480 @@
+var currentScene = 0;
+
+var drawHead = function(x,y,h) {
+    var p = h;
+    stroke(0, 0, 0);
+    strokeWeight(1);
+    fill(255, 221, 173); //head
+    ellipse(x + 87*h/100, y + 86*h/100, 100*h/100, 124*h/100);
+    arc(x + 80*h/100, y + 87*h/100, 42*h/100, 24*h/100, -88, 127);
+    arc(x + 135*h/100, y + 87*h/100, 21*h/100, 25*h/100, -88, 92);
+    arc(x+38*h/100, y+87*h/100, 21*h/100, 25*h/100, 86, 272);
+    fill(255, 255, 255); //mouth
+    arc(x+87*h/100, y+106*h/100, 50*h/100, 45*h/100, 3, 179); 
+    line(x+113*h/100, y+107*h/100, x+61*h/100, y+106*h/100);
+    fill(255, 255, 255);
+    ellipse(x+66*h/100, y+72*h/100, 28*h/100, 20*h/100);
+    fill(255, 255, 255);
+    line(x+110*h/100, y+117*h/100, x+64*h/100, y+116*h/100);
+    line(x+73*h/100, y+107*h/100, x+73*h/100, y+123*h/100);
+    line(x+87*h/100, y+128*h/100, x+87*h/100, y+107*h/100);
+    line(x+101*h/100, y+124*h/100, x+101*h/100, y+106*h/100);
+    ellipse(x+107*h/100, y+72*h/100, 28*h/100, 20*h/100); //eyes
+    fill(79, 56, 24);
+    ellipse(x+66*h/100, y+75*h/100, 18*h/100, 13*h/100);
+    ellipse(x+107*h/100, y+75*h/100, 18*h/100, 13*h/100);
+    fill(0, 0, 0);
+    ellipse(x+107*h/100, y+77*h/100, 10*h/100, 8*h/100);
+    ellipse(x+66*h/100, y+77*h/100, 10*h/100, 8*h/100);
+    rect(x+55*h/100, y+54*h/100, 25*h/100, 5*h/100);
+    rect(x+94*h/100, y+54*h/100, 25*h/100, 5*h/100);
+    arc(x+88*h/100, y+40*h/100, 90*h/100, 40*h/100, -179, 0); //hair
+    arc(x+49*h/100, y+52*h/100, 15*h/100, 42*h/100, -209, -43); 
+    arc(x+127*h/100, y+52*h/100, 15*h/100, 42*h/100, -140, 33);
+};
+var drawBody = function(x,y,h) {
+    var p = h/100;
+    noStroke();
+    fill(79, 182, 255); //body
+    quad(x+15*p, y+125*p, x+84*p, y+148*p, x+130*p, y+216*p, x+1*p, y+214*p);
+    quad(x+161*p, y+128*p, x+80*p, y+151*p, x+72*p, y+215*p, x+180*p, y+217*p);
+    fill(0, 37, 117);
+    rect(x+47*p, y+157*p, 32*p, 5*p);
+    rect(x+47*p, y+162*p, 5*p, 32*p);
+    rect(x+47*p, y+189*p, 32*p, 5*p);
+    rect(x+90*p, y+157*p, 5*p, 39*p);
+    rect(x+94*p, y+157*p, 26*p, 5*p);
+    rect(x+94*p, y+176*p, 26*p, 5*p);
+    rect(x+118*p, y+157*p, 5*p, 24*p);
+    fill(255, 221, 173);
+    stroke(255, 0, 26); //necklace
+    strokeWeight(10*p);
+    point(x+119*p, y+143*p);
+    strokeWeight(10*p);
+    point(x+102*p, y+151*p);
+    strokeWeight(10*p);
+    point(x+86*p, y+154*p);
+    strokeWeight(10*p);
+    point(x+69*p, y+150*p);
+    strokeWeight(10*p);
+    point(x+54*p, y+143*p);
+};
+
+
+var drawBitmoji = function(x,y,h) {
+    drawHead(x,y,h);
+    drawBody(x,y,h);
+};
+
+var Button = function(config) {
+    this.x = config.x || 0;
+    this.y = config.y || 0;
+    this.color = config.color || color(255, 255, 255);
+    this.width = config.width || 150;
+    this.height = config.height || 50;
+    this.label = config.label || "Click";
+    this.onClick = config.onClick || function() {};
+};
+
+Button.prototype.draw = function() {
+    fill(this.color);
+    strokeWeight(3);
+    rect(this.x, this.y, this.width, this.height, 5);
+    fill(255, 255, 255);
+    textSize(27);
+    textAlign(LEFT, TOP);
+    text(this.label, this.x+12, this.y+this.height/6);
+};
+
+Button.prototype.changecolor = function(x, y, z) {
+   this.color = color(x, y, z);
+};
+Button.prototype.isMouseInside = function() {   //boolean true if mouse over button, else false
+    return mouseX > this.x &&
+           mouseX < (this.x + this.width) &&
+           mouseY > this.y &&
+           mouseY < (this.y + this.height);
+};
+
+Button.prototype.handleMouseClick = function() {
+    if (this.isMouseInside()) {
+        this.onClick();
+    }
+};  
+
+
+
+
+
+var startButton = new Button({
+    x: 116,
+    y: 315,
+    width: 145,
+    height: 73,
+    color: color(255, 0, 0),
+    label: "Start",
+    onClick: function() {
+    mouseDragged = function() {
+currentScene = 1;
+    };
+    }
+});
+
+var splashScreen = function () {
+    background(115, 255, 97);
+    textSize(39);
+    fill(12, 37, 176);
+    text("Geometry Dash", 46, 50);
+    drawBitmoji(100,100,100);
+    startButton.draw();
+    
+};
+
+
+var character = function(x, y) {
+    this.x = x;
+    this.y = y;
+    this.width = 30;
+    this.height = 30;
+  
+};
+
+character.prototype.draw = function() {
+    fill(49, 227, 0);
+    this.y = constrain(this.y, -100, height-400);
+    stroke(0, 0, 0);
+    rect(this.x + 10, this.y + 273, this.width, this.height);
+    fill(0, 0, 0);
+    rect(this.x + 15, this.y + 292, this.width - 10 , this.height - 25);
+    rect(this.x + 15, this.y + 279, this.width - 24, this.height - 25);
+    rect(this.x + 29, this.y + 279, this.width - 24, this.height - 25);
+    
+};
+
+character.prototype.hop = function() {
+    this.y -= 12;
+};
+character.prototype.fall = function() {
+    this.y += 12;
+};
+
+
+var Spike = function(x, y, a, b, c, d) {
+    this.x = x;
+    this.y = y;
+    this.x2 = a;
+    this.y2 = b;
+    this.x3 = c;
+    this.y3 = d;
+};
+
+Spike.prototype.draw = function(x, y, a, b, c, d) {
+    fill(0, 0, 0);
+    triangle(this.x, this.y, this.x2, this.y2, this.x3, this.y3);
+};
+
+
+
+
+var character = new character(10,0);
+
+var x = 0;
+
+var spike = new Spike(x + 160, 305, x + 196, 305, x + 178, 266);
+var spike2 = new Spike(x + 196, 305, x + 232, 305, x + 214, 273);
+var spike3 = new Spike(x + 325, 305, x + 375, 305, x + 350, 273);
+var spike4 = new Spike(x + 525, 305, x + 575, 305, x + 550, 273);
+var spike5 = new Spike(x + 677, 263, x + 714, 263, x + 696, 296);
+var spike6 = new Spike(x + 715, 263, x + 753, 263, x + 733, 296);
+var spike7 = new Spike(x + 754, 263, x + 790, 263, x + 773, 296);
+var spike8 = new Spike(x + 257, 150, x + 289, 150, x + 276, 230);
+var spike9 = new Spike(x + 866, 305, x + 902, 305, x + 884, 273);
+var spike10 = new Spike(x + 820, 150, x + 840, 150, x + 830, 230); 
+var spike11 = new Spike(x + 940, 150, x + 970, 150, x + 955, 230); 
+var spike12 = new Spike(x + 970, 150, x + 1000, 150, x + 985, 230); 
+var spike13 = new Spike(x + 1000, 150, x + 1030, 150, x + 1015, 230); 
+var spike14 = new Spike(x + 1030, 150, x + 1060, 150, x + 1045, 230); 
+var spike15 = new Spike(x + 1060, 150, x + 1090, 150, x + 1075, 230); 
+
+var gameOverScreen = function() {
+    background(255, 0, 0);
+    fill(0, 0, 0);
+    textSize(46);
+    text("GAME OVER!!!!", 39, 224);
+};
+
+var level1 = function() {
+    background(27, 69, 168);
+    fill(0, 0, 0);
+    stroke(0, 247, 255);
+    rect(0, 304, 400, 100);
+    spike.draw(x + 200, 305, x + 236, 305, x + 218, 273);
+    spike2.draw(x + 236, 305, x + 272, 305, x + 254, 273);
+    spike3.draw(x + 325, 305, x + 375, 305, x + 350, 273);
+    spike4.draw(x + 525, 305, x + 575, 305, x + 550, 273);
+    rect(x + 676, 225, 37, 37);
+    rect(x + 714, 225, 37, 37);
+    rect(x + 752, 225, 37, 37);
+    rect(0,0,400,150);
+    spike5.draw(x + 677, 263, x + 714, 263, x + 696, 296);
+    spike6.draw(x + 715, 263, x + 753, 263, x + 733, 296);
+    spike7.draw(x + 754, 263, x + 790, 263, x + 773, 296);
+    spike8.draw();
+    spike9.draw();
+    spike10.draw();
+    spike11.draw();
+    spike12.draw();
+    spike13.draw();
+    spike14.draw();
+    spike15.draw();
+     x -= 2;
+     spike.x -= 2;
+     spike.x2 -= 2;
+     spike.x3 -= 2;
+     spike2.x -= 2;
+     spike2.x2 -= 2;
+     spike2.x3 -= 2;
+     spike3.x -= 2;
+     spike3.x2 -= 2;
+     spike3.x3 -= 2;
+     spike4.x -= 2;
+     spike4.x2 -= 2;
+     spike4.x3 -= 2;
+     spike5.x -= 2;
+     spike5.x2 -= 2;
+     spike5.x3 -= 2;
+     spike6.x -= 2;
+     spike6.x2 -= 2;
+     spike6.x3 -= 2;
+     spike7.x -= 2;
+     spike7.x2 -= 2;
+     spike7.x3 -= 2;
+     spike8.x -= 2;
+     spike8.x2 -= 2;
+     spike8.x3 -= 2;
+     spike9.x -= 2;
+     spike9.x2 -= 2;
+     spike9.x3 -= 2;
+     spike10.x -= 2;
+     spike10.x2 -= 2;
+     spike10.x3 -= 2;
+     spike11.x -= 2;
+     spike11.x2 -= 2;
+     spike11.x3 -= 2;
+     spike15.x -= 2;
+     spike12.x2 -= 2;
+     spike12.x3 -= 2;
+     spike12.x -= 2;
+     spike13.x2 -= 2;
+     spike13.x3 -= 2;
+     spike13.x -= 2;
+     spike14.x2 -= 2;
+     spike14.x3 -= 2;
+     spike14.x -= 2;
+     spike15.x2 -= 2;
+     spike15.x3 -= 2;
+};
+
+  splashScreen();
+
+var draw = function() {
+ if (currentScene === 0) {
+ splashScreen();
+ }   
+ else {
+     level1();
+       if (keyIsPressed && key.code === 32) {
+        character.hop();
+    } else {
+        character.fall();
+    }
+    
+   if(spike.x <= character.x && spike.x2 >= character.x && character.y >= 12) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike.x += 2;
+     spike.x2 += 2;
+     spike.x3 += 2;
+     character = 400;
+     
+}
+
+ if(spike2.x <= character.x && spike2.x2 >= character.x && character.y >= 12) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike2.x += 2;
+     spike2.x2 += 2;
+     spike2.x3 += 2;
+     character = 400;
+     
+}
+
+if(spike3.x <= character.x && spike3.x2 >= character.x && character.y >= 12) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike3.x += 2;
+     spike3.x2 += 2;
+     spike3.x3 += 3;
+     character = 400;
+     
+}
+
+if(spike4.x <= character.x && spike4.x2 >= character.x && character.y >= 12) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike4.x += 2;
+     spike4.x2 += 2;
+     spike4.x3 += 3;
+     character = 400;
+     
+}
+
+if(spike5.x <= character.x && spike5.x2 >= character.x && character.y >= 12) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike5.x += 2;
+     spike5.x2 += 2;
+     spike5.x3 += 3;
+     character = 400;
+     
+}
+
+if(spike6.x <= character.x && spike6.x2 >= character.x && character.y >= 12) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike6.x += 2;
+     spike6.x2 += 2;
+     spike6.x3 += 3;
+     character = 400;
+     
+}
+
+if(spike7.x <= character.x && spike7.x2 >= character.x && character.y >= 12) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike7.x += 2;
+     spike7.x2 += 2;
+     spike7.x3 += 3;
+     character = 400;
+     
+}
+
+if(spike8.x <= character.x && spike8.x2 >= character.x && character.y <= 0) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike8.x += 2;
+     spike8.x2 += 2;
+     spike8.x3 += 3;
+     character = 400;
+     
+}
+
+if(spike9.x <= character.x && spike9.x2 >= character.x && character.y >= 12) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike9.x += 2;
+     spike9.x2 += 2;
+     spike9.x3 += 3;
+     character = 400;
+     
+}
+
+if(spike11.x <= character.x && spike11.x2 >= character.x && character.y <= 0) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike11.x += 2;
+     spike11.x2 += 2;
+     spike11.x3 += 3;
+     character = 400;
+     
+}
+
+if(spike10.x <= character.x && spike10.x2 >= character.x && character.y <= 0) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike10.x += 2;
+     spike10.x2 += 2;
+     spike10.x3 += 3;
+     character = 400;
+     
+}
+
+if(spike12.x <= character.x && spike12.x2 >= character.x && character.y <= 0) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike12.x += 2;
+     spike12.x2 += 2;
+     spike12.x3 += 3;
+     character = 400;
+     
+}
+
+if(spike13.x <= character.x && spike13.x2 >= character.x && character.y <= 0) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike13.x += 2;
+     spike13.x2 += 2;
+     spike13.x3 += 2;
+     character = 400;
+     
+}
+
+if(spike14.x <= character.x && spike14.x2 >= character.x && character.y <= 0) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike14.x += 2;
+     spike14.x2 += 2;
+     spike14.x3 += 2;
+     character = 400;
+     
+}
+
+if(spike15.x <= character.x && spike15.x2 >= character.x && character.y <= 0) { 
+      
+         gameOverScreen();
+          x += 2;
+     spike15.x += 2;
+     spike15.x2 += 2;
+     spike15.x3 += 2;
+     character = 400;
+     
+}
+
+if(spike15.x <= character.x && spike15.x2 >= character.x && character.y >= 0) { 
+     fill(0, 255, 43);
+     text("YOU WIN!!!", 128, 200);
+     x += 2;
+     spike15.x += 2;
+     spike15.x2 += 2;
+     spike15.x3 += 2;
+     
+     
+}
+    character.draw();
+}
+ mouseClicked = function() {
+   if (currentScene === 0) {
+       startButton.handleMouseClick();
+   }
+   if(mouseX > 115 && mouseX < 260 && mouseY > 315 && mouseY < 385) {
+    currentScene += 1;
+}
+
+
+
+};
+};
